@@ -2,7 +2,14 @@ import basis
 import numpy as np
 
 def _normalize(X):
-    raise 'Not Implemented'
+    result = X.copy()
+    mins = np.amix(X, axis=0)
+    maxs = np.amax(X, axis=0)
+    for (m, j), value in np.ndenumerate(result):
+        mid = (maxs[j] + minx[j]) / 2
+        result[m, j] = (value - m) / (maxs[j] - m)
+
+    return result
 
 class LinearRegressor():
     def __init__(basis=basis.SimpleBasis):
@@ -11,13 +18,21 @@ class LinearRegressor():
     """
     Args:
         X (np.array(shape=(M, D))) : Training Data (M : number of training samples, D : data dimension)
-        T (np.array(shape=(1, M))) : Target Function Values
+        T (np.array(shape=(M,))) : Target Function Values
     Return:
-        A function from (np.array(shape=(1,D))) to number
+        A function from (np.array(shape=(D,))) to number
     """
     def fitTargetFunction(X, T):
-        normalizedX = _normalize(X)
-        Y = self.basis.apply(X)
-        Yaug = np.append( X, np.ones(X.shape[1]) ) # Bias augmented
-        raise 'Not Implemented'
+        designMatrixNonAugmented = self.basis.apply(_normalize(X))
+        designMatrix = np.insert( designMatrixNonAugmented, 0, np.ones(designMatrixNonAugmented.shape[0]) )
+        mlWeights = np.matmul(np.linalg.pinv(designMatrix), T)
+
+        """
+        Arg:
+            x (np.array(shape=(D,))
+        """
+        def targetFunction(x):
+            return np.dot(mlWeights, x)
+
+        return targetFunction
 

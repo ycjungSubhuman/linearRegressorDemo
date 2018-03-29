@@ -36,7 +36,7 @@ phi_j(x) = x^j
 class PowerBasis(Basis):
     def apply(self, x):
         result = x.copy()
-        for (m, j), value in numpy.ndenumerate(result):
+        for (m, j), value in np.ndenumerate(result):
             result[m, j] = value**(j+1)
         return result
 
