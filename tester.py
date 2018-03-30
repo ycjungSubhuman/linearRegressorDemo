@@ -39,7 +39,7 @@ class CCPPTester:
                 targetFunction = self.regressor.fitTargetFunction(trainX, trainT)
                 msres[batch, i] = _getRMSE(targetFunction, validateX, validateT)
         self.msresOfFeatureSelection.append( msres.flatten() )
-        print ( '  MSRE mean : {}, variance : {}'.format( np.mean(msres.flatten()), np.std(msres.flatten()) ) )
+        print ( '  MSRE mean : {}, stddev : {}'.format( np.mean(msres.flatten()), np.std(msres.flatten()) ) )
 
     def _runParamDimension(self, paramDimension):
         indices = [0, 1, 2, 3]
