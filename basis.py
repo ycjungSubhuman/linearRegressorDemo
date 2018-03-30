@@ -1,15 +1,12 @@
 import numpy as np
-import basisutil
 
 def _unnormalizedGaussian(x, mu, sigma):
-    assert(x.shape==mu.shape)
     return np.exp( -((x-mu)**2) / (2*(sigma**2)) )
 
 def _logisticSigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 def _sigmoid(x, mu, sigma):
-    assert(x.shape==mu.shape)
     return _logisticSigmoid( (x-mu) / sigma )
 
 class Basis():
@@ -49,8 +46,8 @@ class GaussianBasis(Basis):
         self.sigma = sigma
 
     def apply(self, x):
-        mus = np.arange(start=-1, stop=1, step=(2/x.shape[1]))
-        return _unnormalizedGaussian(x, mus, self.sigma)
+        mus = np.arange(start=-1, stop=1, step=(2/x.shape[0]))
+        return _unnormalizedGaussian(x, np.reshape(mus, (mus.shape[0], 1)), self.sigma)
 
 """
 phi_j(x) with sigmoid
@@ -61,6 +58,6 @@ class SigmoidBasis(Basis):
         self.sigma = sigma
 
     def apply(self, x):
-        mus = np.arange(start=-1, stop=1, step=(2/x.shape[1]))
-        return _sigmoid(x, mus, self.sigma)
+        mus = np.arange(start=-1, stop=1, step=(2/x.shape[0]))
+        return _sigmoid(x, np.reshape(mus, (mus.shape[0], 1)), self.sigma)
 

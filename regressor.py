@@ -1,18 +1,8 @@
 import basis
 import numpy as np
 
-def _normalize(X):
-    result = X.copy()
-    mins = np.amix(X, axis=0)
-    maxs = np.amax(X, axis=0)
-    for (m, j), value in np.ndenumerate(result):
-        mid = (maxs[j] + minx[j]) / 2
-        result[m, j] = (value - m) / (maxs[j] - m)
-
-    return result
-
 class LinearRegressor():
-    def __init__(basis=basis.SimpleBasis):
+    def __init__(self, basis=basis.SimpleBasis):
         self.basis = basis
 
     """
@@ -22,9 +12,9 @@ class LinearRegressor():
     Return:
         A function from (np.array(shape=(D,))) to number
     """
-    def fitTargetFunction(X, T):
-        designMatrixNonAugmented = self.basis.apply(_normalize(X))
-        designMatrix = np.insert( designMatrixNonAugmented, 0, np.ones(designMatrixNonAugmented.shape[0]) )
+    def fitTargetFunction(self, X, T):
+        designMatrixNonAugmented = self.basis.apply(X)
+        designMatrix = np.insert( designMatrixNonAugmented, 0, np.ones(designMatrixNonAugmented.shape[0]), axis=1)
         mlWeights = np.matmul(np.linalg.pinv(designMatrix), T)
 
         """
@@ -32,7 +22,7 @@ class LinearRegressor():
             x (np.array(shape=(D,))
         """
         def targetFunction(x):
-            return np.dot(mlWeights, x)
+            return np.dot( mlWeights, np.insert(x, 0, 1) )
 
         return targetFunction
 
